@@ -38,7 +38,7 @@ class ReplyController extends Controller
         $get=$request->get();
          unset($get['r']);
 //        print_r($get);die;
-        str_replace(htmlspecialchars($get['g_reply']),$get['g_reply'],$get);
+        $get=str_replace($get['g_reply'],htmlspecialchars($get['g_reply']),$get);
         $connection = Yii::$app->db;
         $connection->createCommand()->insert('wx_reply',$get)->execute();
         $WxReply=new WxReply();

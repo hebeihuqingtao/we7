@@ -230,18 +230,25 @@
                 $("#s1").show();
             }
         })
+        $.getJSON('index.php?r=reply/guize',{w_id:w_id},function(msg){
+            html='<div class="portlet-body"><table class="table table-striped table-bordered table-hover table-full-width" id="sample_1"> <thead> <tr> <th>序号</th> <th>关键字</th> <th class="hidden-480">回复内容</th> <th class="hidden-480">操作</th></tr> </thead>'
+
+            for(var i= 0; i<msg.length;i++){
+                html+=' <tbody> <tr> <td> '+msg[i].g_id+'</td> <td class="hidden-480">'+msg[i].g_rule+'</td> <td class="hidden-480">'+msg[i].g_reply+'</td> <td class="hidden-480"><a href="javascript:;" id="dele" g_id="'+msg[i].g_id+'">删除</a></td></tr></tbody>'
+            }
+            html+=' </table></div>';
+            $('#s2').html(html)
+    })
+    })
         $(document).delegate('button','click',function(){
-//            var g_type=$('#g_type').val();
+           var g_type=$('#g_type').val();
             var g_reply=$('#g_reply').val();
             var g_rule=$('#g_rule').val();
             var w_id=$('#select').val();
                var g_type= $('input:radio:checked').val()
-//            alert(g_type)
-             return false
-
             htmla='<div class="portlet-body"><table class="table table-striped table-bordered table-hover table-full-width" id="sample_1"> <thead> <tr> <th>序号</th> <th>关键字</th> <th class="hidden-480">回复内容</th> <th class="hidden-480">操作</th></tr> </thead>'
             $.getJSON('index.php?r=reply/hui',{w_id:w_id,g_rule:g_rule,g_reply:g_reply,g_type:g_type},function(msg){
-//                alert(msg)
+
                 for(var i= 0; i<msg.length;i++){
                     htmla+=' <tbody> <tr> <td> '+msg[i].g_id+'</td> <td class="hidden-480">'+msg[i].g_rule+'</td> <td class="hidden-480">'+msg[i].g_reply+'</td> <td class="hidden-480"><a href="javascript:;" id="dele" g_id="'+msg[i].g_id+'">删除</a></td></tr></tbody>'
                 }
@@ -251,20 +258,8 @@
             })
         })
 
-        //显示
-        $.getJSON('index.php?r=reply/guize',{w_id:w_id},function(msg){
-            html='<div class="portlet-body"><table class="table table-striped table-bordered table-hover table-full-width" id="sample_1"> <thead> <tr> <th>序号</th> <th>关键字</th> <th class="hidden-480">回复内容</th> <th class="hidden-480">操作</th></tr> </thead>'
 
-            for(var i= 0; i<msg.length;i++){
-                html+=' <tbody> <tr> <td> '+msg[i].g_id+'</td> <td class="hidden-480">'+msg[i].g_rule+'</td> <td class="hidden-480">'+msg[i].g_reply+'</td> <td class="hidden-480"><a href="javascript:;" id="dele" g_id="'+msg[i].g_id+'">删除</a></td></tr></tbody>'
-            }
-            html+=' </table></div>';
-            $('#s2').html(html)
-        })
 
-        //删除
-
-    })
     $(document).delegate('#dele','click',function(){
 //        alert(111)
         var g_id=$(this).attr('g_id');
