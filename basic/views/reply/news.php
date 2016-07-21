@@ -164,7 +164,7 @@
                       <div class="control-group">
                     <label class="control-label">选择回复方式</label>
                     <div class="controls">
-                            <input type="radio" name="g_type" value="1" />文字
+                            <input type="radio" name="g_type" value="1" checked />文字
                             <input type="radio" name="g_type" value="2" />图片
                             <input type="radio" name="g_type" value="3" />语音
                             <input type="radio" name="g_type" value="4" />视频
@@ -185,10 +185,20 @@
 
                             <label class="control-label">回复内容</label>
 
-                            <div class="controls">
+                            <div class="controls" id="text">
                                 <textarea class="span6 m-wrap" rows="3" id="g_reply"  ></textarea>
                             </div>
 
+                            <div class="controls" id="images" hidden="hidden">
+                                <input type="file" class="default"  id="g_reply" />
+
+                            </div>
+                            <div class="controls" id="mp3" hidden="hidden">
+                                <input type="file" class="default"  id="g_reply" />
+                            </div>
+                            <div class="controls" id="mp4" hidden="hidden">
+                                <input type="file" class="default"  id="g_reply" />
+                            </div>
                         </div>
 
 
@@ -225,11 +235,14 @@
         $.get('index.php?r=index/check',{w_id:w_id},function(msg){
             if(msg==0){
                 $("#s1").hide();
+                $("#s2").html('');
                 alert("对接失败")
             }else{
                 $("#s1").show();
             }
         })
+
+
         $.getJSON('index.php?r=reply/guize',{w_id:w_id},function(msg){
             html='<div class="portlet-body"><table class="table table-striped table-bordered table-hover table-full-width" id="sample_1"> <thead> <tr> <th>序号</th> <th>关键字</th> <th class="hidden-480">回复内容</th> <th class="hidden-480">操作</th></tr> </thead>'
 
@@ -241,7 +254,6 @@
     })
     })
         $(document).delegate('button','click',function(){
-           var g_type=$('#g_type').val();
             var g_reply=$('#g_reply').val();
             var g_rule=$('#g_rule').val();
             var w_id=$('#select').val();
@@ -268,5 +280,30 @@
            _this.remove();
         })
     })
+        $(document).delegate('input:radio:checked','click',function(){
+            var g_type= $(this).val()
+            if(g_type==1){
+                $('#text').show();
+                $('#images').hide();
+                $('#mp3').hide();
+                $('#mp4').hide();
+            }else if(g_type==2){
+
+                $('#text').hide();
+                $('#images').show();
+                $('#mp3').hide();
+                $('#mp4').hide();
+            }else if(g_type==3){
+                $('#text').hide();
+                $('#images').hide();
+                $('#mp3').show();
+                $('#mp4').hide();
+            }else if(g_type==4){
+                $('#text').hide();
+                $('#images').hide();
+                $('#mp3').hide();
+                $('#mp4').show();
+            }
+        })
 </script>
 
