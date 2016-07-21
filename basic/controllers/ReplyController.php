@@ -36,7 +36,7 @@ class ReplyController extends Controller
     public  function  actionHui(){
         $request=Yii::$app->request;
         $get=$request->get();
-      unset($get['r']);
+         unset($get['r']);
 //        print_r($get);die;
         str_replace(htmlspecialchars($get['g_reply']),$get['g_reply'],$get);
         $connection = Yii::$app->db;

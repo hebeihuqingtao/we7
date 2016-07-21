@@ -8,14 +8,14 @@ use app\models\WxAdmin;
 //---------------------登录的控制器--------------------------------------------->
 class LoginController extends Controller
 {
-//    public function init()
-//    {
-//        parent::init();
-//        $session = Yii::$app->session;
-//        if ($session->has('name')){
-//            return $this->redirect(['/index/list']);
-//        }
-//    }
+    public function init()
+    {
+        parent::init();
+        $session = Yii::$app->session;
+        if ($session->has('name')){
+            return $this->redirect(['/index/list']);
+        }
+    }
 
     public  $enableCsrfValidation = false;
 

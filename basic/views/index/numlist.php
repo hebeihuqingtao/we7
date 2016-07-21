@@ -210,7 +210,7 @@
                 <td class="hidden-480"><?=$country->w_serveid?></td>
 
                 <td class="hidden-480"  >
-                    <input type="text" value="<?=$country->w_url?>" onclick='oCopy(this)'/>
+                  <?=$country->w_url?>
                 </td>
 
                 <td class="hidden-480"><?=$country->w_token?></td>
@@ -231,13 +231,3 @@
 
 </div>
 </div>
-
-    <script language="javascript">
-    function oCopy(obj){
-        obj.select();
-        js=obj.createTextRange();
-        js.execCommand("Copy")
-        alert("复制成功!");
-    }
-</script>
-

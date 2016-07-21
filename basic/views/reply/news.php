@@ -159,8 +159,19 @@
 
 
                         </div>
-                     <div id="s1" hidden="hidden">
-                        <input type="hidden" value="1" id="g_type"/>
+    <div id="s1" hidden="hidden">
+
+                      <div class="control-group">
+                    <label class="control-label">选择回复方式</label>
+                    <div class="controls">
+                            <input type="radio" name="g_type" value="1" />文字
+                            <input type="radio" name="g_type" value="2" />图片
+                            <input type="radio" name="g_type" value="3" />语音
+                            <input type="radio" name="g_type" value="4" />视频
+                        <div id="form_2_membership_error"></div>
+                          </div>
+                          <br/>
+
                         <div class="control-group">
 
                             <label class="control-label">定义规则</label>
@@ -184,8 +195,6 @@
                         <div class="form-actions"  id="button">
 
                             <button type="button" class="btn blue"><i class="icon-ok"></i>定义</button>
-
-                            <input type="reset" class="btn" value="重填"/>
                         </div>
 
                     <!-- END FORM-->
@@ -209,6 +218,7 @@
         var w_id = $(this).val();
         if(w_id==0){
             $("#s1").hide();
+            $("#s2").html('');
             return false;
         }
 
@@ -220,17 +230,20 @@
                 $("#s1").show();
             }
         })
-        htmla='<div class="portlet-body"><table class="table table-striped table-bordered table-hover table-full-width" id="sample_1"> <thead> <tr> <th>序号</th> <th>关键字</th> <th class="hidden-480">回复内容</th> <th class="hidden-480">操作</th></tr> </thead>'
         $(document).delegate('button','click',function(){
-            var g_type=$('#g_type').val();
+//            var g_type=$('#g_type').val();
             var g_reply=$('#g_reply').val();
             var g_rule=$('#g_rule').val();
             var w_id=$('#select').val();
-            $.getJSON('index.php?r=reply/hui',{w_id:w_id,g_rule:g_rule,g_reply:g_reply,g_type:g_type},function(msg){
+               var g_type= $('input:radio:checked').val()
+//            alert(g_type)
+             return false
 
+            htmla='<div class="portlet-body"><table class="table table-striped table-bordered table-hover table-full-width" id="sample_1"> <thead> <tr> <th>序号</th> <th>关键字</th> <th class="hidden-480">回复内容</th> <th class="hidden-480">操作</th></tr> </thead>'
+            $.getJSON('index.php?r=reply/hui',{w_id:w_id,g_rule:g_rule,g_reply:g_reply,g_type:g_type},function(msg){
 //                alert(msg)
                 for(var i= 0; i<msg.length;i++){
-                    htmla+=' <tbody> <tr> <td> '+msg[i].g_id+'</td> <td class="hidden-480">'+msg[i].g_rule+'</td> <td class="hidden-480">'+msg[i].g_reply+'</td> <td class="hidden-480"><a href="javascript:;" id="del" g_id="'+msg[i].g_id+'">删除</a></td></tr></tbody>'
+                    htmla+=' <tbody> <tr> <td> '+msg[i].g_id+'</td> <td class="hidden-480">'+msg[i].g_rule+'</td> <td class="hidden-480">'+msg[i].g_reply+'</td> <td class="hidden-480"><a href="javascript:;" id="dele" g_id="'+msg[i].g_id+'">删除</a></td></tr></tbody>'
                 }
                 html+=' </table></div>';
                 $('#s2').html(htmla)
@@ -238,24 +251,27 @@
             })
         })
 
-        html='<div class="portlet-body"><table class="table table-striped table-bordered table-hover table-full-width" id="sample_1"> <thead> <tr> <th>序号</th> <th>关键字</th> <th class="hidden-480">回复内容</th> <th class="hidden-480">操作</th></tr> </thead>'
+        //显示
         $.getJSON('index.php?r=reply/guize',{w_id:w_id},function(msg){
+            html='<div class="portlet-body"><table class="table table-striped table-bordered table-hover table-full-width" id="sample_1"> <thead> <tr> <th>序号</th> <th>关键字</th> <th class="hidden-480">回复内容</th> <th class="hidden-480">操作</th></tr> </thead>'
+
             for(var i= 0; i<msg.length;i++){
-                html+=' <tbody> <tr> <td> '+msg[i].g_id+'</td> <td class="hidden-480">'+msg[i].g_rule+'</td> <td class="hidden-480">'+msg[i].g_reply+'</td> <td class="hidden-480"><a href="javascript:;" id="del" g_id="'+msg[i].g_id+'">删除</a></td></tr></tbody>'
+                html+=' <tbody> <tr> <td> '+msg[i].g_id+'</td> <td class="hidden-480">'+msg[i].g_rule+'</td> <td class="hidden-480">'+msg[i].g_reply+'</td> <td class="hidden-480"><a href="javascript:;" id="dele" g_id="'+msg[i].g_id+'">删除</a></td></tr></tbody>'
             }
             html+=' </table></div>';
             $('#s2').html(html)
         })
 
-
-        $(document).delegate('#del','click',function(){
-            var g_id=$(this).attr('g_id');
-            $.get('index.php?r=reply/del',{id:g_id},function(info){
-              $(this).parent('tbody').remove();
-            })
-        })
+        //删除
 
     })
-
+    $(document).delegate('#dele','click',function(){
+//        alert(111)
+        var g_id=$(this).attr('g_id');
+        _this=$(this).parent().parent();
+        $.get('index.php?r=reply/del',{id:g_id},function(info){
+           _this.remove();
+        })
+    })
 </script>
 
