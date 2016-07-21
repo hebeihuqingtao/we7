@@ -241,7 +241,6 @@
     })
     })
         $(document).delegate('button','click',function(){
-           var g_type=$('#g_type').val();
             var g_reply=$('#g_reply').val();
             var g_rule=$('#g_rule').val();
             var w_id=$('#select').val();
