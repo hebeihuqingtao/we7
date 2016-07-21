@@ -151,18 +151,18 @@ class IndexController extends Controller{
      {
           "type":"click",
           "name":"'.$zuo.'",
-          "key":"V1001_TODAY_MUSIC"
+          "key":"www.huq.pub"
       },
       {
           "type":"click",
           "name":"'.$zhong.'",
-          "key":"V1001_TODAY_MUSIC"
+          "key":"www.huq.pub"
       },
 
             {
                "type":"click",
                "name":"'.$you.'",
-               "key":"V1001_GOOD"
+               "key":"www.huq.pub"
             }]
 
  }';
