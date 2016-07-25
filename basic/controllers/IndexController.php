@@ -125,13 +125,17 @@ class IndexController extends Controller{
         if (!$session->has('access_token'.$w_id)){
             $obj= file_get_contents("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$rows[w_appid]&secret=$rows[w_serveid]");
             $js=json_decode($obj,true);
+//            print_r($js);die;
+            https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID
             if(array_key_exists('access_token',$js)){
-                $session->set('access_token'.$w_id,$js['access_token']);
+              $session->set('access_token'.$w_id,$js['access_token']);
+
                 echo 1;
             }else{
                 echo 0;
             }
         }else{
+//            echo $session->get('access_token'.$w_id);
             echo 1;
         }
     }
@@ -141,33 +145,298 @@ class IndexController extends Controller{
         $session = Yii::$app->session;
 
         $who=$request->post("who");
+        $session->set('w_id',$who);
         $Access_token=$session->get('access_token'.$who);
         $url="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$Access_token;
-        $zuo=$request->post("zuo");
-        $zhong=$request->post("zhong");
-        $you=$request->post("you");
-        $data=' {
-     "button":[
-     {
-          "type":"click",
-          "name":"'.$zuo.'",
-          "key":"www.huq.pub"
-      },
-      {
-          "type":"click",
-          "name":"'.$zhong.'",
-          "key":"www.huq.pub"
-      },
+            //  $dat = $request->post();
+            //分别接收各个值
+            //左
+            $arr_left_name  =  $request->post('left');       //左name值
+            $arr_left_count = count($arr_left_name);       //左name值长度
+            $arr_left_type  =  $request->post('leftgenre');  //左type值
+            $arr_left_key   =  $request->post('leftmold');   //左key值或者url值
+            $arr_left   = array(); //左
+            $arr_centre = array(); //中
+            $arr_right  = array(); //右
+            $pid = 0;
+            if($arr_left_count==1){
+                foreach($arr_left_name as $k=>$v){
+                    $arr_left[$k]['type'] = $arr_left_type[$k];
+                    $arr_left[$k]['name'] = $v;
+                    $arr_left[$k]['pid']  = $pid;
+                    if($arr_left_type[$k]=='click'){
+                        $arr_left[$k]['key'] = $arr_left_key[$k];
+                    }else{
+                        $arr_left[$k]['url'] = $arr_left_key[$k];
+                    }
+                }
+            }else{
+                $kk = 0;
+                $i  = 0;
+                foreach($arr_left_name as $k=>$v){
+                    $kk = $k-1;
+                    if($kk<0){
+                        $arr_left[$k]['name'] = $v;
+                        $arr_left[$k]['pid']  = $i;
+                        $i +=1;
+                        $session->set('left', $i);
+                    }else{
+                        $pid = $session->get('left');
+                        $i +=1;
+                        $arr_left[$k]['type'] = $arr_left_type[$kk];
+                        $arr_left[$k]['name'] = $v;
+                        $arr_left[$k]['pid']  = $pid;
+                        if($arr_left_type[$kk]=='click'){
+                            $arr_left[$k]['key'] = $arr_left_key[$kk];
+                        }else{
+                            $arr_left[$k]['url'] = $arr_left_key[$kk];
+                        }
+                    }
+                }
+            }
+            //中
+            $arr_centre_name  =  $request->post('centre');       //中name值
+            $arr_centre_count = count($arr_centre_name);         //中name值长度
+            $arr_centre_type  =  $request->post('centregenre');  //中type值
+            $arr_centre_key   =  $request->post('centremold');   //中key值或者url值
 
-            {
-               "type":"click",
-               "name":"'.$you.'",
-               "key":"www.huq.pub"
-            }]
+            if($arr_centre_count==1){
+                foreach($arr_centre_name as $k=>$v){
+                    $arr_centre[$k]['type'] = $arr_centre_type[$k];
+                    $arr_centre[$k]['name'] = $v;
+                    $arr_centre[$k]['pid']  = $pid;
+                    if($arr_centre_type[$k]=='click'){
+                        $arr_centre[$k]['key'] = $arr_centre_key[$k];
+                    }else{
+                        $arr_centre[$k]['url'] = $arr_centre_key[$k];
+                    }
+                }
+            }else{
+                $kk = 0;
+                $i  = 0;
+                foreach($arr_centre_name as $k=>$v){
+                    $kk = $k-1;
+                    if($kk<0){
+                        $arr_centre[$k]['name'] = $v;
+                        $arr_centre[$k]['pid']  = $i;
+                        $i +=1;
+                        $session->set('centre', $i);
+                    }else{
+                        $pid = $session->get('centre');
+                        $i +=1;
+                        $arr_centre[$k]['type'] = $arr_centre_type[$kk];
+                        $arr_centre[$k]['name'] = $v;
+                        $arr_centre[$k]['pid']  = $pid;
+                        if($arr_centre_type[$kk]=='click'){
+                            $arr_centre[$k]['key'] = $arr_centre_key[$kk];
+                        }else{
+                            $arr_centre[$k]['url'] = $arr_centre_key[$kk];
+                        }
+                    }
+                }
+            }
+            //右
+            $arr_right_name  =  $request->post('right');       //右name值
+            $arr_right_count = count($arr_right_name);         //右name值长度
+            $arr_right_type  =  $request->post('rightgenre');  //右type值
+            $arr_right_key   =  $request->post('rightmold');   //右key值或者url值
+            // print_r($dat);die;
+            if($arr_right_count==1){
+                foreach($arr_right_name as $k=>$v){
+                    $arr_right[$k]['type'] = $arr_right_type[$k];
 
- }';
+                    $arr_right[$k]['name'] = $v;
+                    $arr_right[$k]['pid']  = $pid;
+                    if($arr_right_type[$k]=='click'){
+                        $arr_right[$k]['key'] = $arr_right_key[$k];
+                    }else{
+                        $arr_right[$k]['url'] = $arr_right_key[$k];
+                    }
+                }
+            }else{
+                $kk = 0;
+                $i  = 0;
+                foreach($arr_right_name as $k=>$v){
+                    $kk = $k-1;
+                    if($kk<0){
+                        $arr_right[$k]['name'] = $v;
+                        $arr_right[$k]['pid']  = $i;
+                        $i +=1;
+
+                    }else{
+                        $pid = $session->get('right');
+                        $i +=1;
+                        $arr_right[$k]['type'] = $arr_right_type[$kk];
+                        $arr_right[$k]['name'] = $v;
+                        $arr_right[$k]['pid']  = $pid;
+                        if($arr_right_type[$kk]=='click'){
+                            $arr_right[$k]['key'] = $arr_right_key[$kk];
+                        }else{
+                            $arr_right[$k]['url'] = $arr_right_key[$kk];
+                        }
+                    }
+                }
+            }
+            $arr_11 = array();//指明数组(去子父级pid)
+            $arr_2 = array();//指明数组
+            //左边
+            if($arr_left){
+                $arr_left_k = array();
+                //  $arr_left_parent = array();
+                foreach ($arr_left as $k=>$v){
+                    $arr_left_k[$k+1] = $v;
+                }
+                //  print_r($arr_left_k);die;
+                $ii = 0;
+                $ll = 0;
+                foreach($arr_left_k as $k=>$v){
+                    $arr_left_1 = array();
+                    if($v['pid']==0){
+                        $ii += 1;
+                        $arr_left_1[$ii-1] = $v;
+                        unset($arr_left_1[$ii-1]['pid']);
+                        $session->set('left_name', $v['name']);
+                    }elseif($v['pid']!=0 ){
+                        foreach($arr_left_k as $kk=>$vv){
+                            if($v['pid']==$kk) {
+                                $left_name =  $session->get('left_name');
+                                $arr_left_1[$ii - 1]['name'] = $left_name;
+                                $arr_left_1[$ii - 1]['sub_button'][] = $v;
+                            }
+                        }
+                    }
+                }
+                //   $arr_1[] = $arr_1;
+                //  print_r($arr_left_1);die;
+                //去除子父级关系pid
+                foreach($arr_left_1 as $k=>$v){
+                    if(count($v)==2){
+                        foreach($v['sub_button'] as $kk=>$vv){
+                            //   print_r($vv);//输出查看
+                            unset($vv['pid']);
+                            $v['sub_button'][$kk] = $vv;
+                        }
+                        $arr_11[]=$v;
+                        $arr_2[] = $arr_11;
+                    }else{
+                        $arr_2[] = $arr_left_1;
+                    }
+                }
+
+
+            }
+            //  print_r($arr_1);die;//输出查看
+            //中间
+            if($arr_centre){
+                $arr_centre_k = array();
+                $arr_centre_parent = array();
+                foreach ($arr_centre as $k=>$v){
+                    $arr_centre_k[$k+1] = $v;
+                }
+                $ii = 0;
+                $ll = 0;
+                foreach($arr_centre_k as $k=>$v){
+                    $arr_centre_1 = array();
+                    if($v['pid']==0){
+                        $ii += 1;
+                        $arr_centre_1[$ii-1] = $v;
+                        unset($arr_centre_1[$ii-1]['pid']);
+                        $session->set('centre_name', $v['name']);
+                    }elseif($v['pid']!=0 ){
+                        foreach($arr_centre_k as $kk=>$vv){
+                            if($v['pid']==$kk) {
+                                $centre_name =  $session->get('centre_name');
+                                $arr_centre_1[$ii - 1]['name'] = $centre_name;
+                                $arr_centre_1[$ii - 1]['sub_button'][] = $v;
+                            }
+                        }
+                    }
+                }
+                //去除子父级关系pid(中间)
+                foreach($arr_centre_1 as $k=>$v){
+                    if(count($v)==2){
+                        foreach($v['sub_button'] as $kk=>$vv){
+                            //   print_r($vv);//输出查看
+                            unset($vv['pid']);
+                            $v['sub_button'][$kk] = $vv;
+                        }
+                        $arr_11[]=$v;
+                        $arr_2[] = $arr_11;
+                    }else{
+                        $arr_2[] = $arr_centre_1;
+                    }
+                }
+            }
+            //右面
+            if($arr_right){
+                $arr_right_k = array();
+                $arr_right_parent = array();
+                foreach ($arr_right as $k=>$v){
+                    $arr_right_k[$k+1] = $v;
+                }
+                $ii = 0;
+                $ll = 0;
+                foreach($arr_right_k as $k=>$v){
+                    $arr_right_1 = array();
+                    if($v['pid']==0){
+                        $ii += 1;
+                        $arr_right_1[$ii-1] = $v;
+                        unset($arr_right_1[$ii-1]['pid']);
+                        $session->set('right_name', $v['name']);
+                    }elseif($v['pid']!=0 ){
+                        foreach($arr_right_k as $kk=>$vv){
+                            if($v['pid']==$kk) {
+                                $right_name =  $session->get('right_name');
+                                $arr_right_1[$ii - 1]['name'] = $right_name;
+                                $arr_right_1[$ii - 1]['sub_button'][] = $v;
+                            }
+                        }
+                    }
+                }
+                //去除子父级关系pid
+                foreach($arr_right_1 as $k=>$v){
+                    if(count($v)==2){
+                        foreach($v['sub_button'] as $kk=>$vv){
+                            //   print_r($vv);//输出查看
+                            unset($vv['pid']);
+                            $v['sub_button'][$kk] = $vv;
+                        }
+                    }
+
+                    $arr_11 = $v;
+                }
+                $arr_2[] = $arr_right_1;
+            }
+            //数组转换想要的四维数组
+            $arr_3 = array();
+            $arr_4 = array();
+            foreach ($arr_2 as $k=>$v){
+                foreach($v as $kk=>$vv){
+                }
+                $arr_3[$k] = $vv;
+            }
+            //去除未设定值得菜单栏
+            foreach($arr_3 as $k=>$v){
+                if(array_key_exists('sub_button',$v)){
+                    foreach($v['sub_button'] as $kk=>$vv){
+                        if(array_key_exists('type',$vv) && $vv['type']=='0'){
+                            unset($arr_3[$k]);
+                        }
+                    }
+                }
+            }
+
+            //   print_r($arr_3);//输出查看
+            $arr_4['button'] = $arr_3;
+        $data = json_encode($arr_4,JSON_UNESCAPED_UNICODE);
+//        echo json_decode($data);
+//            echo $data;//输出查看
+//            die;
+
+
         $a= $this->weixinPost($url,$data,"POST");
 
+//        print_r($a);die;
         $array=json_decode($a,true);
         //   print_r($js);
         if($array['errcode']==0){
@@ -175,8 +444,6 @@ class IndexController extends Controller{
         }else{
             echo "<script>alert('失败');location.href='index.php?r=index/myself'</script>";
         }
-
-
     }
 
     private function weixinPost($url,$data,$method){

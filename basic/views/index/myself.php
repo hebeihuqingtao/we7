@@ -1,4 +1,5 @@
 <script src="js1/jquery.js"></script>
+<script src="js1/menu.js"></script>
 <div class="container-fluid">
     <div class="row-fluid">
 
@@ -165,14 +166,24 @@
                         <label class="control-label">左</label>
 
                         <div class="controls">
-                            <input type="text" class="m-wrap large" name="zuo" disabled=""/>
-                            <button name="button" type="button" disabled class="btn" onclick='additem("tb")'>添加</button>
 
-                            <table id="tb"></table>
+                            <input  class="m-wrap medium"  type="text" name="left[]"  disabled="">
+                            <input type="button" class="subcatalog" mid="left"  value="添加子目录">
+						<span id="delleft">
+							<select style="width: 100px;height: 32px;" name="leftgenre[]" class="genre" kid="leftgenre" fid="leftmold">
+                                <option value="0">选择类型</option>
+                                <option value="click">点击</option>
+                                <option value="view">链接地址</option>
+                            </select>
+							<span id="leftgenre">
 
+							</span>
+						</span>
 
                         </div>
-
+                                <span>
+                                    <span id="left" aid="一"></span>
+                                </span>
                     </div>
 
                     <div class="control-group">
@@ -180,14 +191,26 @@
                         <label class="control-label">中</label>
 
                         <div class="controls">
+                            <input  disabled="" class="m-wrap medium"  type="text" name="centre[]" >
 
-                            <input type="text" class="m-wrap large" disabled="" name="zhong"/>
-                            <button name="button" type="button" disabled class="btn" onclick='additem("tr")'>添加</button>
-                            <table id="tr"></table>
+                            <input type="button" class="subcatalog" mid="centre" value="添加子目录">
+						<span id="delcentre">
+							<select style="width: 100px;height: 32px;" name="centregenre[]" class="genre" kid="centregenre" fid="centremold">
+                                <option value="0">选择类型</option>
+                                <option value="click">点击</option>
+                                <option value="view">链接地址</option>
+                            </select>
+							<span id="centregenre">
 
+							</span>
+						</span>
                         </div>
+                                <span>
+                                    <span id="centre"  aid="一"></span>
+                                </span>
 
                     </div>
+
 
                     <div class="control-group">
 
@@ -195,12 +218,22 @@
 
                         <div class="controls">
 
-                            <input type="text"  class="m-wrap large" disabled="" name="you"/>
-                            <button name="button" type="button" disabled class="btn" onclick='additem("tc")'>添加</button>
-                            <table id="tc"></table>
+                            <input  type="text" name="right[]"  disabled=""  class="m-wrap medium" >
+                            <input type="button" class="subcatalog" mid="right"  value="添加子目录">
+                           <span id="delright">
+								<select style="width: 100px;height: 32px;" name="rightgenre[]" class="genre" kid="rightgenre" fid="rightmold">
+                                    <option value="0">选择类型</option>
+                                    <option value="click">点击</option>
+                                    <option value="view">链接地址</option>
+                                </select>
+							<span id="rightgenre">
+                            </span>
+                           </span>
 
                         </div>
-
+                            <span class="del_right">
+                                    <span id="right"  aid="一"></span>
+                                </span>
                     </div>
 
 
@@ -233,6 +266,7 @@
         if(w_id==0){
             $("input").attr("disabled",true);
             $(".btn").attr("disabled",true);
+            $(".class").attr("disabled",true);
             $("#button").hide();
 
             return false;
@@ -241,12 +275,14 @@
          if(msg==0){
              $("input").attr("disabled",true);
              $(".btn").attr("disabled",true);
+             $(".class").attr("disabled",true);
              $("#button").hide();
 
              alert("对接失败")
          }else{
-            $("input").attr("disabled",false);
-            $(".btn").attr("disabled",false);
+            $("input").removeAttr("disabled");
+            $(".btn").removeAttr("disabled");
+            $(".select").removeAttr("disabled");
             $("#button").show();
 
          }
@@ -255,37 +291,6 @@
 
 
 
-    var count=0 ;
-
-    function additem(id)
-    {
-        var row,cell,str;
-        row = document.getElementById(id).insertRow();
-
-        if(row != null )
-        {
-            cell = row.insertCell();
-            cell.innerHTML="<input id=\"St"+count+"\" type=\"text\" name=\"St"+count+"\" ><button name=\"button\" type=\"button\"  class=\"btn\" onclick=\'deleteitem(this,"+id+")'>删除</button>";
-            count ++;
-        }
-    }
-    function deleteitem(obj,id)
-    {
-//        alert(obj)
-        var curRow = obj.parentNode.parentNode;
-        id.deleteRow(curRow.rowIndex);
-    }
-
-    function getsub()
-    {
-        var re="";
-        for (var    i = 0 ;i<count;i++)
-        {
-            re += document.getElementsByName("St"+i)[0].value;
-
-        }
-        document.getElementById("Hidden1").value=re;
-    }
 
 
 </script>
